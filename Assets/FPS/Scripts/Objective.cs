@@ -13,6 +13,10 @@ public class Objective : MonoBehaviour
     [Tooltip("Delay before theobjective becomes visible")]
     public float delayVisible;
     List<OpenDoor> Doors = new List<OpenDoor>();
+    public bool rewardable;
+    public List<WeaponController> rewards = new List<WeaponController>();
+    PlayerWeaponsManager player;
+    Collider other;
     public bool isCompleted { get; private set; }
     public bool isBlocking() => !(isOptional || isCompleted);
 
@@ -37,6 +41,9 @@ public class Objective : MonoBehaviour
         m_NotificationHUDManager = FindObjectOfType<NotificationHUDManager>();
         DebugUtility.HandleErrorIfNullFindObject<NotificationHUDManager, Objective>(m_NotificationHUDManager, this);
         m_NotificationHUDManager.RegisterObjective(this);
+
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerWeaponsManager>();
+        
     }
 
     public void UpdateObjective(string descriptionText, string counterText, string notificationText)
@@ -47,12 +54,23 @@ public class Objective : MonoBehaviour
     {
         door.open = true;
     }
+
+
+
     public void CompleteObjective(string descriptionText, string counterText, string notificationText)
     {
         isCompleted = true;
         foreach(var door in Doors)
         {
             DoorOpen(door);
+        }
+        foreach(var weapon in rewards)
+        {
+          if(rewardable)
+            {
+                player.AddWeapon(weapon);
+            }
+         
         }
         onUpdateObjective.Invoke(new UnityActionUpdateObjective(this, descriptionText, counterText, true, notificationText));
 
