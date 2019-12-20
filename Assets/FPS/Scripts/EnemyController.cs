@@ -113,6 +113,7 @@ public class EnemyController : MonoBehaviour
     Collider[] m_SelfColliders;
     GameFlowManager m_GameFlowManager;
     bool m_WasDamagedThisFrame;
+    public bool ghost { get; set; }
 
     void Start()
     {
@@ -164,7 +165,6 @@ public class EnemyController : MonoBehaviour
         m_EyeColorMaterialPropertyBlock.SetColor("_EmissionColor", defaultEyeColor);
         m_EyeRendererData.renderer.SetPropertyBlock(m_EyeColorMaterialPropertyBlock, m_EyeRendererData.materialIndex);
     }
-
     void Update()
     {
         EnsureIsWithinLevelBounds();
@@ -229,7 +229,11 @@ public class EnemyController : MonoBehaviour
                         Actor hitActor = closestValidHit.collider.GetComponentInParent<Actor>();
                         if (hitActor == actor)
                         {
-                            isSeeingTarget = true;
+                            if(ghost == false)
+                            {
+                                isSeeingTarget = true;
+                            }
+                            
                             closestSqrDistance = sqrDistance;
 
                             m_TimeLastSeenTarget = Time.time;
@@ -240,12 +244,12 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        isTargetInAttackRange = knownDetectedTarget != null && Vector3.Distance(transform.position, knownDetectedTarget.transform.position) <= attackRange;
+        isTargetInAttackRange = knownDetectedTarget != null && ghost == false && Vector3.Distance(transform.position, knownDetectedTarget.transform.position) <= attackRange;
 
         // Detection events
         if (!hadKnownTarget && 
             knownDetectedTarget != null && 
-            onDetectedTarget != null)
+            onDetectedTarget != null && ghost == false)
         {
             onDetectedTarget.Invoke();
 
@@ -255,7 +259,7 @@ public class EnemyController : MonoBehaviour
         }
         if (hadKnownTarget && 
             knownDetectedTarget == null && 
-            onLostTarget != null)
+            onLostTarget != null && ghost == true)
         {
             onLostTarget.Invoke();
 

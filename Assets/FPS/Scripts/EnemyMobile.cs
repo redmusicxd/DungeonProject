@@ -56,6 +56,11 @@ public class EnemyMobile : MonoBehaviour
 
     void Update()
     {
+       // print(aiState);
+       if(m_EnemyController.ghost == true)
+       {
+           aiState = AIState.Patrol;
+       }
         UpdateAIStateTransitions();
         UpdateCurrentAIState();
 
@@ -73,9 +78,16 @@ public class EnemyMobile : MonoBehaviour
         // Handle transitions 
         switch (aiState)
         {
+            case AIState.Patrol:
+                // Transition to follow after Ghost Perk if in line of sight
+                if(m_EnemyController.isSeeingTarget && m_EnemyController.ghost == false)
+                {
+                    aiState = AIState.Follow;
+                }
+                break;
             case AIState.Follow:
                 // Transition to attack when there is a line of sight to the target
-                if (m_EnemyController.isSeeingTarget && m_EnemyController.isTargetInAttackRange)
+                if (m_EnemyController.isSeeingTarget && m_EnemyController.isTargetInAttackRange && m_EnemyController.ghost == false)
                 {
                     aiState = AIState.Attack;
                     m_EnemyController.SetNavDestination(transform.position);
@@ -83,7 +95,7 @@ public class EnemyMobile : MonoBehaviour
                 break;
             case AIState.Attack:
                 // Transition to follow when no longer a target in attack range
-                if (!m_EnemyController.isTargetInAttackRange)
+                if (!m_EnemyController.isTargetInAttackRange && m_EnemyController.ghost == false)
                 {
                     aiState = AIState.Follow;
                 }
@@ -126,7 +138,7 @@ public class EnemyMobile : MonoBehaviour
 
     void OnDetectedTarget()
     {
-        if (aiState == AIState.Patrol)
+        if (aiState == AIState.Patrol && m_EnemyController.ghost == false)
         {
             aiState = AIState.Follow;
         }
