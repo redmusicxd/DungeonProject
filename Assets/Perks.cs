@@ -12,59 +12,46 @@ public class Perks : MonoBehaviour
         public float time;
         public bool isPermanent;
         public bool activated;
+        public enum PowerUpState
+        {
+            InAttractMode,
+            IsCollected,
+            IsExpiring
+        }
+        public PowerUpState powerUpState;
         public float Htime { get; set; }
     }
-//public enum PowerName
-//    {
-//        SprintBoost,
-//        Ghosting,
-//        Invulnerability,
-//        HealthBonus,
-//        Blast,
-//        Dodge,
-//        DoubleDamage
-//    }
-//    public PowerName power;
     public Powers[] PowersList;
 //    public string Description;
-//    public float expireT;
-//    public float SBoost;
-//    public float Healthb;
     private float oldValue;
     public bool isBlast;
     public bool isDodge;
     public bool isDoubleDamage;
-//   private float expire;
-//   private bool activated;
     public GameObject SpecialEffect;
     public AudioClip SoundEffect;
     private PlayerCharacterController player;
     private EnemyController enemy;
     private Health health;
-    public enum PowerUpState
-    {
-        InAttractMode,
-        IsCollected,
-        IsExpiring
-    }
     
-    public PowerUpState powerUpState;
     // Start is called before the first frame update
     void Start()
     {
+        enemy = GameObject.FindWithTag("Enemy").GetComponent<EnemyController>();
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerCharacterController>();
+        health = GameObject.FindWithTag("Player").GetComponent<Health>();
         foreach(var i in PowersList)
         {
             i.Htime = i.time;
         }
-       
-        enemy = GameObject.FindWithTag("Enemy").GetComponent<EnemyController>();
-        player = GameObject.FindWithTag("Player").GetComponent<PlayerCharacterController>();
-        health = GameObject.FindWithTag("Player").GetComponent<Health>();
-        powerUpState = PowerUpState.InAttractMode;
+        foreach (var i in PowersList)
+        {
+            i.powerUpState = Powers.PowerUpState.InAttractMode;
+        }
         foreach(var i in PowersList)
         {
             i.Name = null;
         }
+        oldValue = player.sprintSpeedModifier;
         SprintBoost(false);
         HealthBonus(false);
         Invincible(false);
@@ -79,18 +66,21 @@ public class Perks : MonoBehaviour
     }
     public void PowerUpCollected()
     {
-        if (powerUpState == PowerUpState.IsCollected || powerUpState == PowerUpState.IsExpiring)
-        {
-            return;
-        }
         foreach(var i in PowersList)
         {
             if(i.isPermanent)
             {
                 i.time = 0;
             }
+            if (i.powerUpState == Powers.PowerUpState.IsCollected || i.powerUpState == Powers.PowerUpState.IsExpiring)
+            {
+                return;
+            }
+            if(i.activated)
+            {
+            i.powerUpState = Powers.PowerUpState.IsCollected;
+            }
         }
-        powerUpState = PowerUpState.IsCollected;
         PowerUpPayload();
         transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Lerp(transform.localPosition.y, -3, Time.deltaTime), transform.localPosition.z);
     }
@@ -99,10 +89,10 @@ public class Perks : MonoBehaviour
     {
         foreach(var i in PowersList)
         {
-        if (i.time == 0)
-        {
-            Expiring();
-        }
+            if (i.time == 0)
+            {
+                Expiring();
+            }
         }
         foreach(var i in PowersList)
         {
@@ -112,19 +102,21 @@ public class Perks : MonoBehaviour
             }
         }
     }
+
     public void Expiring()
     {
         foreach(var i in PowersList)
         {
-            if (powerUpState == PowerUpState.IsCollected && i.time > 0 && i.activated && !i.isPermanent)
-            {
-                i.time -= Time.deltaTime;
-            }
-                // if (i.Htime / 2 >= i.time)
-                // {
-                //     powerUpState = PowerUpState.IsExpiring;
-                // } 
-               print(i.Htime);
+           // if (i.powerUpState == Powers.PowerUpState.IsCollected && i.time > 0 && i.activated && !i.isPermanent)
+           // {
+           //     i.time -= Time.deltaTime;
+           // }
+           // if (i.Htime / 2 >= i.time)
+           // {
+           //     i.powerUpState = Powers.PowerUpState.IsExpiring;
+           // } 
+           //print(i.Htime);
+           //print(i.Name);
             if(!i.activated && !i.isPermanent)
             {
                 SendMessage(i.Name, true);
@@ -141,13 +133,15 @@ public class Perks : MonoBehaviour
         }
     }
 
-
     public void SprintBoost(bool expired)
     {
-        if(powerUpState == PowerUpState.InAttractMode)
+        if (expired)
         {
-            oldValue = player.sprintSpeedModifier;
-            foreach (var i in PowersList)
+            player.sprintSpeedModifier = oldValue;
+        }
+        foreach (var i in PowersList)
+        {
+            if (i.powerUpState == Powers.PowerUpState.InAttractMode)
             {
                 if (i.Name == GetCurrentMethod())
                 {
@@ -159,31 +153,22 @@ public class Perks : MonoBehaviour
                     break;
                 }
             }
-        }
-        if(powerUpState == PowerUpState.IsCollected && !expired)
-        {
-            foreach(var i in PowersList)
+            if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
             {
-                if(i.Name == GetCurrentMethod())
+                if (i.Name == GetCurrentMethod())
                 {
                     player.sprintSpeedModifier = i.parameter;
                 }
-
             }
-
-        }
-        if(expired)
-        {
-            player.sprintSpeedModifier = oldValue;
         }
     }
+
     public void HealthBonus(bool expired)
     {
-        if (powerUpState == PowerUpState.InAttractMode)
+        foreach (var i in PowersList)
         {
-            foreach (var i in PowersList)
+            if (i.powerUpState == Powers.PowerUpState.InAttractMode)
             {
-                
                 if (i.Name == GetCurrentMethod())
                 {
                     i.isPermanent = true;
@@ -195,10 +180,7 @@ public class Perks : MonoBehaviour
                     break;
                 }
             }
-        }
-        if(powerUpState == PowerUpState.IsCollected && !expired)
-        {
-            foreach(var i in PowersList)
+            if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
             {
                 if (i.Name == GetCurrentMethod())
                 {
@@ -207,7 +189,6 @@ public class Perks : MonoBehaviour
                 }
             }
         }
-
        if(expired)
        {
            return;
@@ -216,9 +197,9 @@ public class Perks : MonoBehaviour
 
     public void Ghosting(bool expired)
     {
-        if (powerUpState == PowerUpState.InAttractMode)
+        foreach (var i in PowersList)
         {
-            foreach (var i in PowersList)
+            if (i.powerUpState == Powers.PowerUpState.InAttractMode)
             {
                 if (i.Name == GetCurrentMethod())
                 {
@@ -230,23 +211,24 @@ public class Perks : MonoBehaviour
                     break;
                 }
             }
-        }
-        if (powerUpState == PowerUpState.IsCollected && !expired)
-        {
-            enemy.ghost = true;
-        }
-        if(expired)
-        {
-            enemy.ghost = false;
+            if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+            {
+                enemy.ghost = true;
+            }
+            if (expired)
+            {
+                enemy.ghost = false;
+            }
         }
     }
+
     public void Invincible(bool expired)
     {
-        if (powerUpState == PowerUpState.InAttractMode)
+        foreach (var i in PowersList)
         {
-            foreach (var i in PowersList)
+            if (i.powerUpState == Powers.PowerUpState.InAttractMode)
             {
-                if(i.Name == GetCurrentMethod())
+                if (i.Name == GetCurrentMethod())
                 {
                     break;
                 }
@@ -256,15 +238,33 @@ public class Perks : MonoBehaviour
                     break;
                 }
             }
+            if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+            {
+                health.invincible = true;
+            }
+            if (expired)
+            {
+                health.invincible = false;
+            }
         }
-        if(powerUpState == PowerUpState.IsCollected && !expired)
-        {
-            health.invincible = true;
-        }
+    }
 
-        if(expired)
+    void PushPhysics()
+    {
+        // Bit shift the index of the Enemy layer to get a bit mask, this will affect only colliders in Enemy layer
+        int enemyLayerIndex = LayerMask.NameToLayer("Enemy");
+        int layerMask = 1 << enemyLayerIndex;
+
+        Vector3 explosionPos = transform.position;
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, 5f, layerMask);
+        foreach (Collider hit in colliders)
         {
-            health.invincible = false;
+            Rigidbody rb = hit.GetComponent<Rigidbody>();
+
+            if (rb != null)
+            {
+                AddExplosionForce(rb, 10f, explosionPos, 5f);
+            }
         }
     }
 
@@ -275,13 +275,29 @@ public class Perks : MonoBehaviour
 
         return sf.GetMethod().Name;
     }
+
+    public static void AddExplosionForce(Rigidbody body, float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    {
+        var dir = (body.transform.position - explosionPosition);
+        float wearoff = 1 - (dir.magnitude / explosionRadius);
+        body.AddForce(dir.normalized * explosionForce * wearoff);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(powerUpState == PowerUpState.IsCollected)
+        foreach(var i in PowersList)
         {
-            Expiring();
+            if(i.powerUpState == Powers.PowerUpState.IsCollected && i.time > 0 && i.activated && !i.isPermanent)
+            {
+                i.time -= Time.deltaTime;
+                if (i.time < 1 && !i.isPermanent)
+                {
+                    SendMessage(i.Name, true);
+                    //   powerUpState = PowerUpState.IsExpiring;
+                }
+            
+            }
         }
-
     }
 }
