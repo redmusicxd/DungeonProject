@@ -24,7 +24,6 @@ public class Perks : MonoBehaviour
     public Powers[] PowersList;
 //    public string Description;
     private float oldValue;
-    public bool isBlast;
     public bool isDodge;
     public bool isDoubleDamage;
     public GameObject SpecialEffect;
@@ -32,6 +31,7 @@ public class Perks : MonoBehaviour
     private PlayerCharacterController player;
     private EnemyController enemy;
     private Health health;
+    private Explosion explosion;
     
     // Start is called before the first frame update
     void Start()
@@ -39,7 +39,9 @@ public class Perks : MonoBehaviour
         enemy = GameObject.FindWithTag("Enemy").GetComponent<EnemyController>();
         player = GameObject.FindWithTag("Player").GetComponent<PlayerCharacterController>();
         health = GameObject.FindWithTag("Player").GetComponent<Health>();
-        foreach(var i in PowersList)
+        explosion = GetComponent<Explosion>();
+        explosion.bomb = GameObject.FindWithTag("Player");
+        foreach (var i in PowersList)
         {
             i.Htime = i.time;
         }
@@ -56,6 +58,7 @@ public class Perks : MonoBehaviour
         HealthBonus(false);
         Invincible(false);
         Ghosting(false);
+        Push(false);
     }
     public void OnTriggerEnter(Collider other)
     {
@@ -245,6 +248,33 @@ public class Perks : MonoBehaviour
             if (expired)
             {
                 health.invincible = false;
+            }
+        }
+    }
+    public void Push(bool expired)
+    {
+        foreach (var i in PowersList)
+        {
+            if (i.powerUpState == Powers.PowerUpState.InAttractMode)
+            {
+                if (i.Name == GetCurrentMethod())
+                {
+                    break;
+                }
+                if (i.Name == null)
+                {
+                    i.Name = GetCurrentMethod();
+                    break;
+                }
+            }
+            if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+            {
+                explosion.active = true;
+                explosion.power = i.parameter;
+            }
+            if (expired)
+            {
+                explosion.active = false;
             }
         }
     }
