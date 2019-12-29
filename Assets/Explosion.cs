@@ -12,7 +12,7 @@ public class Explosion : MonoBehaviour
     {
         if(active)
         {
-            if (Input.GetKeyDown("b"))
+            if (Input.GetKeyDown(KeyCode.B))
             { // This checks once bomb is in scene or gameobject gets enabled by adding it to the scene.
                 SendMessage("Detonate"); //Calls Detonate() after 5 seconds 
             }

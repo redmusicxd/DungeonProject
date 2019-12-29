@@ -84,6 +84,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     public UnityAction<bool> onStanceChanged;
 
+    public Vector3 moves;
     public Vector3 characterVelocity { get; set; }
     public bool isGrounded { get; private set; }
     public bool hasJumpedThisFrame { get; private set; }
