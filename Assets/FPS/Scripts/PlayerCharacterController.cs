@@ -32,6 +32,9 @@ public class PlayerCharacterController : MonoBehaviour
     public float accelerationSpeedInAir = 25f;
     [Tooltip("Multiplicator for the sprint speed (based on grounded speed)")]
     public float sprintSpeedModifier = 2f;
+    [Tooltip("Multiplicator for the walking speed (based on grounded speed)")]
+    public float anspeed = 1f;
+
     [Tooltip("Height at which the player dies instantly when falling off the map")]
     public float killHeight = -50f;
 
@@ -114,7 +117,11 @@ public class PlayerCharacterController : MonoBehaviour
     float m_LastTimeJumped = 0f;
     float m_CameraVerticalAngle = 0f;
     float m_footstepDistanceCounter;
-    float m_TargetCharacterHeight;
+    float m_TargetCharacterHeight; 
+    public float maxDashTime = 0.8f;
+    public float dashStoppingSpeed = 0.1f;
+    public bool dashActive;
+    public float currentDashTime;
 
     const float k_JumpGroundingPreventionTime = 0.2f;
     const float k_GroundCheckDistanceInAir = 0.07f;
@@ -141,6 +148,7 @@ public class PlayerCharacterController : MonoBehaviour
 
         m_Health.onDie += OnDie;
 
+        currentDashTime = maxDashTime;
         // force the crouch state to false when starting
         SetCrouchingState(false, true);
         UpdateCharacterHeight(true);
@@ -189,6 +197,7 @@ public class PlayerCharacterController : MonoBehaviour
         UpdateCharacterHeight(false);
 
         HandleCharacterMovement();
+        HandleDash();
     }
 
     void OnDie()
@@ -234,6 +243,22 @@ public class PlayerCharacterController : MonoBehaviour
         }
     }
 
+    void HandleDash()
+    {
+        if (Input.GetKeyDown(KeyCode.Z) && dashActive)
+            {
+                currentDashTime = 0.0f;
+            }
+            if (currentDashTime < maxDashTime)
+            {
+                anspeed = 3f;
+                currentDashTime += dashStoppingSpeed;
+            }
+            else
+            {
+                anspeed = 1f;
+            }
+    }
     void HandleCharacterMovement()
     {
         // horizontal character rotation
@@ -257,12 +282,12 @@ public class PlayerCharacterController : MonoBehaviour
         // character movement handling
         bool isSprinting = m_InputHandler.GetSprintInputHeld();
         {
+            
             if (isSprinting)
             {
                 isSprinting = SetCrouchingState(false, false);
             }
-
-            float speedModifier = isSprinting ? sprintSpeedModifier : 1f;
+            float speedModifier = isSprinting ? sprintSpeedModifier : anspeed;
 
             // converts move input to a worldspace vector based on our character's transform orientation
             Vector3 worldspaceMoveInput = transform.TransformVector(m_InputHandler.GetMoveInput());

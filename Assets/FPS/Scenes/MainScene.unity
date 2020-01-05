@@ -1050,49 +1050,56 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301353491}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bee9016b20cd72478c987befd11d958, type: 3}
+  m_Script: {fileID: 11500000, guid: ce31c35c1359d99498662511262c2a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PowersList:
-  - Name: dSprintBoost
-    parameter: 3
-    time: 0
-    isPermanent: 0
-    activated: 0
-    powerUpState: 0
-  - Name: dHealthBonus
-    parameter: 50
-    time: 0
-    isPermanent: 0
-    activated: 0
-    powerUpState: 0
-  - Name: dDoubleDamage
-    parameter: 50
-    time: 0
-    isPermanent: 0
-    activated: 0
-    powerUpState: 0
-  - Name: dGhosting
+  - Name: 
     parameter: 0
     time: 0
     isPermanent: 0
     activated: 0
     powerUpState: 0
-  - Name: dInvincible
+  - Name: 
     parameter: 0
     time: 0
     isPermanent: 0
     activated: 0
     powerUpState: 0
-  - Name: dPush
-    parameter: 10
+  - Name: 
+    parameter: 0
     time: 0
     isPermanent: 0
     activated: 0
     powerUpState: 0
-  - Name: dDodge
+  - Name: 
+    parameter: 0
+    time: 0
+    isPermanent: 0
+    activated: 0
+    powerUpState: 0
+  - Name: 
+    parameter: 0
+    time: 0
+    isPermanent: 0
+    activated: 0
+    powerUpState: 0
+  - Name: 
+    parameter: 0
+    time: 0
+    isPermanent: 0
+    activated: 0
+    powerUpState: 0
+  - Name: 
+    parameter: 0
+    time: 0
+    isPermanent: 0
+    activated: 0
+    powerUpState: 0
+  testing:
+  - Name: 
     parameter: 0
     time: 0
     isPermanent: 0
@@ -39319,6 +39326,7 @@ MonoBehaviour:
   maxSpeedInAir: 10
   accelerationSpeedInAir: 25
   sprintSpeedModifier: 1.5
+  anspeed: 1
   killHeight: -50
   rotationSpeed: 200
   aimingRotationMultiplier: 0.4
@@ -39339,6 +39347,10 @@ MonoBehaviour:
   fallDamageAtMinSpeed: 10
   fallDamageAtMaxSpeed: 30
   moves: {x: 0, y: 0, z: 0}
+  maxDashTime: 1
+  dashStoppingSpeed: 0.1
+  dashActive: 1
+  currentDashTime: 0
 --- !u!114 &3382404669678777822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51335,13 +51347,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4704865185068623876}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3845d540b7bb2640a3961d30d4f91d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerCharacter: {fileID: 3363413185211960582}
   Active: 0
+  maxDashTime: 50
+  dashStoppingSpeed: 0.1
 --- !u!1 &4716225351659946590
 GameObject:
   m_ObjectHideFlags: 0

@@ -135,6 +135,15 @@ public class PlayerInputHandler : MonoBehaviour
 
         return false;
     }
+    public bool GetDashInputHeld()
+    {
+        if (CanProcessInput())
+        {
+            return Input.GetButton(GameConstants.k_ButtonNameDash);
+        }
+
+        return false;
+    }
 
     public bool GetCrouchInputDown()
     {

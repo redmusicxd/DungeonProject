@@ -61,6 +61,7 @@ public class PerkAPI : MonoBehaviour
         playerDodge = GameObject.FindWithTag("Player").GetComponent<PlayerDodge>();
         oldValue = player.sprintSpeedModifier;
         perkman = GetComponent<PerkManager>();
+        playerDodge.enabled = false;
         foreach(var i in PowersList)
         {
             i.powerUpState = Powers.PowerUpState.InAttractMode;
@@ -415,7 +416,7 @@ public class PerkAPI : MonoBehaviour
             }
         }
     } 
-    public void dDodge(bool expired, bool trackit, bool add, bool activate)
+    public void dDash(bool expired, bool trackit, bool add, bool activate)
     {
         if(trackit){
         track++;
@@ -435,20 +436,24 @@ public class PerkAPI : MonoBehaviour
                     if (i.Name == null)
                     {
                         i.Name = GetCurrentMethod();
+                        print("Dash added");
                         break;
                     }
-                    print("Dodge added");
                 }
             }
             if(activate)
             {
                 if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
                 {
-                    playerDodge.Active = true;
+                   // playerDodge.enabled = true;
+                   // playerDodge.Active = true;
+                   player.dashActive = true;
                 }
                 if (expired)
                 {
-                    playerDodge.Active = false;
+                    //playerDodge.Active = false;
+                    //playerDodge.enabled = false;
+                    player.dashActive = false;
                 }
             }
         }
