@@ -24,10 +24,6 @@ public class PerkSystem : MonoBehaviour
     int ghostTime;
     int invTime;
 
-    void Start()
-    {  
-    }
-
 
     void Update()
     {
@@ -62,11 +58,11 @@ public class PerkSystem : MonoBehaviour
         invTime++;
         if (invTime == invincibilityAbilityTime)
         {
-            healthCS.invinciblev1 = false;
+            healthCS.invincible = false;
             invincibilityAbility = false;
             invTime = 0;
         }
-        else { healthCS.invinciblev1 = true; }
+        else { healthCS.invincible = true; }
 
     }   
     public void speedboost()

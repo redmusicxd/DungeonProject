@@ -12,7 +12,8 @@ public class Health : MonoBehaviour
     public UnityAction<float> onHealed;
     public UnityAction onDie;
 
-    public float currentHealth { get; set; }
+    public bool doubled {get; set;}
+    public float currentHealth;
     public bool invincible { get; set; }
     public bool canPickup() => currentHealth < maxHealth;
 
@@ -46,7 +47,12 @@ public class Health : MonoBehaviour
             return;
 
         float healthBefore = currentHealth;
-        currentHealth -= damage;
+        if(doubled)
+        {
+            currentHealth -= damage * 2;
+        }
+        else 
+            currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
         // call OnDamage action

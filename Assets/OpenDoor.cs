@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
+[ExecuteInEditMode]
 public class OpenDoor : MonoBehaviour
 {
     // Smoothly open a door
-    public float doorPos = -6.0f; //Set either positive or negative number to open the door inwards or outwards
+    public float doorPos = -6.0f;
     public bool open = false;
     public float openSpeed = 1;
     float openTime = 0;
@@ -21,12 +22,8 @@ public class OpenDoor : MonoBehaviour
     // Main function
     void Update()
     {
-        if(!open)
-        {
-            Wall.transform.localPosition = new Vector3(Wall.transform.localPosition.x, Mathf.Lerp(Wall.transform.localPosition.y, currenty, Time.deltaTime), Wall.transform.localPosition.z);
-        }
         openTime += openSpeed * Time.deltaTime;
-        Wall.transform.localPosition = new Vector3(Wall.transform.localPosition.x, Mathf.Lerp(Wall.transform.localPosition.y, (open ? doorPos : Wall.transform.localPosition.y), Time.deltaTime), Wall.transform.localPosition.z);
+        Wall.transform.localPosition = new Vector3(Wall.transform.localPosition.x, Mathf.Lerp(Wall.transform.localPosition.y, (open ? doorPos : currenty), Time.deltaTime), Wall.transform.localPosition.z);
         if (Input.GetKeyDown(KeyCode.F) && enter)
         {
             open = !open;
