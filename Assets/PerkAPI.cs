@@ -46,8 +46,8 @@ public class PerkAPI : MonoBehaviour
     public Health p_health{get; set;}
     public Health e_health {get; set;}
     public Explosion explosion {get; set;}
-    public PlayerDodge playerDodge {get; set;}
-    public PerkManager perkman {get; set;}
+   // public PlayerDodge playerDodge {get; set;}
+   // public PerkManager perkman {get; set;}
 
     // Start is called before the first frame update
     void Start()
@@ -58,13 +58,15 @@ public class PerkAPI : MonoBehaviour
         e_health = GameObject.FindWithTag("Enemy").GetComponent<Health>();
         explosion = GetComponent<Explosion>();
         explosion.bomb = GameObject.FindWithTag("Player");
-        playerDodge = GameObject.FindWithTag("Player").GetComponent<PlayerDodge>();
+       // playerDodge = GameObject.FindWithTag("Player").GetComponent<PlayerDodge>();
         oldValue = player.sprintSpeedModifier;
-        perkman = GetComponent<PerkManager>();
-        playerDodge.enabled = false;
+       // perkman = GetComponent<PerkManager>();
+       if(ListSize != 0)
+        {
         foreach(var i in PowersList)
         {
             i.powerUpState = Powers.PowerUpState.InAttractMode;
+        }
         }
         if(ListSize != 0)
         {
