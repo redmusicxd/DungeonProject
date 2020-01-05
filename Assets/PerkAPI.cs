@@ -70,16 +70,17 @@ public class PerkAPI : MonoBehaviour
         {
         AllPowers(new object[4]{false, false, true,false});
         }
-        if(perkman.Perks.Length == 0 || perkman.Perks.Length < track)
-        {
-            perkman.Perks = new Powers[track];
-            Array.Copy(PowersList, perkman.Perks, track);
-        }
+        // if(perkman.Perks.Length == 0 || perkman.Perks.Length < track)
+        // {
+        //     perkman.Perks = new Powers[track];
+        //     Array.Copy(PowersList, perkman.Perks, track);
+        // }
         
     }
     private void Awake() {
-        AllPowers(new object[]{false, true,false,false});
-        ListSize = track;
+        if(ListSize == 0)
+       {AllPowers(new object[]{false, true,false,false});
+       ListSize = track;}
     }
     public void AllPowers(object[] call) {
         //ThePerk instance = GetComponent<ThePerk>();
@@ -195,18 +196,15 @@ public class PerkAPI : MonoBehaviour
                     {
                         i.Name = GetCurrentMethod();
                         i.parameter = 3f;
+                    print("Speed Perk added");
                         break;
                     }
-                    print("Speed Perk added");
                 }
             }
             if(activate){
-                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+                if (i.powerUpState == Powers.PowerUpState.IsCollected && i.Name == GetCurrentMethod() && !expired)
                 {
-                    if (i.Name == GetCurrentMethod())
-                    {
                         player.sprintSpeedModifier = i.parameter;
-                    }
                 }                
             }
         }
@@ -233,20 +231,17 @@ public class PerkAPI : MonoBehaviour
                     {
                         i.Name = GetCurrentMethod();
                         i.parameter = 50;
+                    print("Health Bonus Added");
                         break;
                     }
-                    print("Health Bonus Added");
                 }
             }
             if(activate)
             {
-                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired && activate)
+                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired && i.Name == GetCurrentMethod() && activate)
                 {
-                    if (i.Name == GetCurrentMethod())
-                    {
                         p_health.maxHealth += i.parameter;
                         i.isPermanent = true;
-                    }
                 }
             }
         }
@@ -270,28 +265,23 @@ public class PerkAPI : MonoBehaviour
                 {
                     if (i.Name == GetCurrentMethod())
                     {
-                        i.isPermanent = true;
                         break;
                     }
                     if (i.Name == null)
                     {
                         i.Name = GetCurrentMethod();
                         i.parameter = 50;
+                    print("Double Damage Added");
                         break;
                     }
-                    print("Double Damage Added");
                 }
             }
             if(activate)
             {
-                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+                if (i.powerUpState == Powers.PowerUpState.IsCollected && i.Name == GetCurrentMethod() && !expired)
                 {
-                    if (i.Name == GetCurrentMethod())
-                    {
                         if(p_health.isCritical()){
-                            e_health.doubled = true;    
-                        }
-                        
+                            e_health.doubled = true;            
                     }
                 }                
             }
@@ -321,14 +311,14 @@ public class PerkAPI : MonoBehaviour
                     if (i.Name == null)
                     {
                         i.Name = GetCurrentMethod();
+                    print("Ghosting Added");
                         break;
                     }
-                    print("Ghosting Added");
                 }
             }
             if(activate)
             {
-                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+                if (i.powerUpState == Powers.PowerUpState.IsCollected && i.Name == GetCurrentMethod() && !expired)
                 {
                     enemy.ghost = true;
                 }
@@ -346,7 +336,6 @@ public class PerkAPI : MonoBehaviour
         track++;
        // ListSize = track;    
         }
-
         foreach (var i in PowersList)
         {
             if(add){
@@ -359,14 +348,14 @@ public class PerkAPI : MonoBehaviour
                     if (i.Name == null)
                     {
                         i.Name = GetCurrentMethod();
+                    print("Invincible added");
                         break;
                     }
-                    print("Invincible added");
                 }
             }
             if(activate)
             {
-                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+                if (i.powerUpState == Powers.PowerUpState.IsCollected && i.Name == GetCurrentMethod() && !expired)
                 {
                     p_health.invincible = true;
                 }
@@ -397,14 +386,14 @@ public class PerkAPI : MonoBehaviour
                     {
                         i.Name = GetCurrentMethod();
                         i.parameter = 10;
+                        print("Push Added");
                         break;
                     }
-                    print("Push Added");
                 }
             }
             if(activate)
             {
-                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+                if (i.powerUpState == Powers.PowerUpState.IsCollected && i.Name == GetCurrentMethod() && !expired)
                 {
                     explosion.active = true;
                     explosion.power = i.parameter;
@@ -436,6 +425,7 @@ public class PerkAPI : MonoBehaviour
                     if (i.Name == null)
                     {
                         i.Name = GetCurrentMethod();
+                        i.parameter = 3f;
                         print("Dash added");
                         break;
                     }
@@ -443,10 +433,11 @@ public class PerkAPI : MonoBehaviour
             }
             if(activate)
             {
-                if (i.powerUpState == Powers.PowerUpState.IsCollected && !expired)
+                if (i.powerUpState == Powers.PowerUpState.IsCollected && i.Name == GetCurrentMethod() && !expired)
                 {
                    // playerDodge.enabled = true;
                    // playerDodge.Active = true;
+                   player.dashSpeed = i.parameter;
                    player.dashActive = true;
                 }
                 if (expired)
@@ -472,7 +463,8 @@ public class PerkAPI : MonoBehaviour
     {
         foreach(var i in PowersList)
         {
-            if(i.powerUpState == Powers.PowerUpState.IsCollected && i.time > 0 && i.activated && !i.isPermanent)
+            if(ListSize != 0)
+            {if(i.powerUpState == Powers.PowerUpState.IsCollected && i.time > 0 && i.activated && !i.isPermanent)
             {
                 i.time -= Time.deltaTime;
                // if (i.Htime / 2 >= i.time)
@@ -484,15 +476,15 @@ public class PerkAPI : MonoBehaviour
                     OnePower(new object[4]{true, false, false,false},i.Name);
                     i.powerUpState = Powers.PowerUpState.IsExpiring;
                 }
-            }
+            }}
            //if(i.Name == null)
            //{
            //    AllPowers(new object[4]{false, false, true,false});
            //}
-            if(ListSize > track)
-            {
-                ListSize = track;
-            }
+           //if(ListSize > track)
+           //{
+           //    ListSize = track;
+           //}
             if(i.powerUpState == Powers.PowerUpState.IsCollected && i.time == i.Htime && i.activated && !i.isPermanent)
             {
                 OnePower(new object[4]{false, false, false,true},i.Name);

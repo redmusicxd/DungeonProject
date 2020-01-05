@@ -120,6 +120,7 @@ public class PlayerCharacterController : MonoBehaviour
     float m_TargetCharacterHeight; 
     public float maxDashTime = 0.8f;
     public float dashStoppingSpeed = 0.1f;
+    public float dashSpeed{get; set;}
     public bool dashActive;
     public float currentDashTime;
 
@@ -251,7 +252,7 @@ public class PlayerCharacterController : MonoBehaviour
             }
             if (currentDashTime < maxDashTime)
             {
-                anspeed = 3f;
+                anspeed = dashSpeed;
                 currentDashTime += dashStoppingSpeed;
             }
             else
