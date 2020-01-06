@@ -3,6 +3,9 @@
 [ExecuteInEditMode]
 public class OpenDoor : MonoBehaviour
 {
+    public GameFlowManager_Photon manager;
+
+    public Collider detector;
     // Smoothly open a door
     public float doorPos = -6.0f;
     public bool open = false;
@@ -11,6 +14,7 @@ public class OpenDoor : MonoBehaviour
     public GameObject Wall { get; set; }
     bool enter = false;
     float currenty;
+    public string info;
 
     private void Start()
     {
@@ -32,20 +36,13 @@ public class OpenDoor : MonoBehaviour
     }
 
     // Display a simple info message when player is inside the trigger area
-   void OnGUI()
-   {
-       if (enter)
-        {
-            GUI.Label(new Rect(Screen.width / 2 - 79, Screen.height - 100, 190, 30), "Press 'F' to open/close the door");
-       }
-    }
-
     // Activate the Main function when Player enter the trigger area
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             enter = true;
+            manager.info.text = info;
         }
     }
 
@@ -56,6 +53,7 @@ public class OpenDoor : MonoBehaviour
         {
             enter = false;
             open = false;
+            manager.info.text = "";
         }
     }
 }
