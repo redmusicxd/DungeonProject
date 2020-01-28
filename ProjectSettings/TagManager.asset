@@ -5,6 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - SpawnPoint
+  - Rooms
+  - Cell
+  - Lines
+  - CheckCollider
+  - Ground
+  - BaseWall
+  - BSPPartitionSections
   layers:
   - Default
   - TransparentFX

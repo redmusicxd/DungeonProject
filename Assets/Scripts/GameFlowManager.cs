@@ -4,10 +4,10 @@ using UnityEngine.SceneManagement;
 public class GameFlowManager : MonoBehaviour
 {
    [Header("General")]
- public Transform spawnPoint;
- public GameObject playerPrefab;
+//  public Transform spawnPoint;
+//  public GameObject playerPrefab;
 
- public GameObject jucator;
+//  public GameObject jucator;
 
     [Header("Parameters")]
     [Tooltip("Duration of the fade-to-black at the end of the game")]
@@ -41,7 +41,7 @@ public class GameFlowManager : MonoBehaviour
 
     void Start()
     {
-        sapwPlayer();
+        // sapwPlayer();
 
         AudioUtility.SetMasterVolume(1);
 
@@ -49,19 +49,19 @@ public class GameFlowManager : MonoBehaviour
     }
 
 
-public void sapwPlayer()
-{
+// public void sapwPlayer()
+// {
 
-        GameObject player = (GameObject)Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
+//         GameObject player = (GameObject)Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
 
-        jucator = player;
-        m_Player = FindObjectOfType<PlayerCharacterController>();
-        DebugUtility.HandleErrorIfNullFindObject<PlayerCharacterController, GameFlowManager>(m_Player, this);
+//         jucator = player;
+//         m_Player = FindObjectOfType<PlayerCharacterController>();
+//         DebugUtility.HandleErrorIfNullFindObject<PlayerCharacterController, GameFlowManager>(m_Player, this);
 
-        m_ObjectiveManager = FindObjectOfType<ObjectiveManager>();
-		DebugUtility.HandleErrorIfNullFindObject<ObjectiveManager, GameFlowManager>(m_ObjectiveManager, this);
+//         m_ObjectiveManager = FindObjectOfType<ObjectiveManager>();
+// 		DebugUtility.HandleErrorIfNullFindObject<ObjectiveManager, GameFlowManager>(m_ObjectiveManager, this);
 
-}
+// }
 
 
     void Update()

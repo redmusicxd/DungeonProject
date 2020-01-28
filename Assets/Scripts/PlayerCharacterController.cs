@@ -9,11 +9,6 @@ public class PlayerCharacterController : MonoBehaviour
     public Camera playerCamera;
     [Tooltip("Audio source for footsteps, jump, etc...")]
     public AudioSource audioSource;
-
-
-     public bool canControl;
-     public bool externalController ;
-
     [Header("General")]
     [Tooltip("Force applied downward when in the air")]
     public float gravityDownForce = 20f;
@@ -57,7 +52,7 @@ public class PlayerCharacterController : MonoBehaviour
     [Tooltip("Ratio (0-1) of the character height where the camera will be at")]
     public float cameraHeightRatio = 0.9f;
     [Tooltip("Height of character when standing")]
-    public float capsuleHeightStanding = 1.8f;
+    public float capsuleHeightStanding = 1f;
     [Tooltip("Height of character when crouching")]
     public float capsuleHeightCrouching = 0.9f;
     [Tooltip("Speed of crouching transitions")]
@@ -161,10 +156,6 @@ public class PlayerCharacterController : MonoBehaviour
 
     void Update()
     {
-
-if(canControl)
-{
-
         // check for Y kill
         if(!isDead && transform.position.y < killHeight)
         {
@@ -207,7 +198,6 @@ if(canControl)
 
         HandleCharacterMovement();
         HandleDash();
-}
     }
 
     void OnDie()
